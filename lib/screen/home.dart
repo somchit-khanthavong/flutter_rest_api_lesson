@@ -28,11 +28,8 @@ class _MyHomePageState extends State<MyHomePage> {
         itemCount: users.length,
         itemBuilder: (context, index) {
           final user = users[index];
-          final email = user.email;
-          final phone = user.phone;
           final icon = user.gender == 'male' ? Icons.male : Icons.female;
           final name = user.fullName;
-          final dob = user.dob.date;
           final location = user.location.postcode;
           return ListTile(
             leading: Icon(icon),

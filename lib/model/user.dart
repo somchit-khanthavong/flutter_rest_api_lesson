@@ -30,32 +30,9 @@ class User {
   factory User.fromMap(Map<String, dynamic> e) {
     final name = UserName.fromMap(e['name']);
 
-    final date = e['dob']['date'];
-    final dob = UserDob(
-      date: DateTime.parse(date),
-      age: e['dob']['age'],
-    );
-    final street = LocationStreet(
-      number: e['location']['street']['number'],
-      name: e['location']['street']['name'],
-    );
-    final coordinates = LocationCoordinate(
-      latitude: e['location']['coordinates']['latitude'],
-      longitude: e['location']['coordinates']['longitude'],
-    );
-    final timezone = LocationTimezone(
-      offset: e['location']['timezone']['offset'],
-      description: e['location']['timezone']['description'],
-    );
-    final location = UserLocation(
-      city: e['location']['city'],
-      state: e['location']['state'],
-      country: e['location']['country'],
-      postcode: e['location']['postcode'].toString(),
-      street: street,
-      coordinates: coordinates,
-      timezone: timezone,
-    );
+    final dob = UserDob.fromMap(e['dob']);
+
+    final location = UserLocation.fromMap(e['location']);
 
     return User(
       gender: e['gender'],
