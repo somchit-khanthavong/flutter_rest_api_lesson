@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+import 'package:rest_api_project/model/user.dart';
+import 'package:rest_api_project/services/user_api.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key});
@@ -10,7 +10,14 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  List<dynamic> users = [];
+  List<User> users = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUsers();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,36 +28,27 @@ class _MyHomePageState extends State<MyHomePage> {
         itemCount: users.length,
         itemBuilder: (context, index) {
           final user = users[index];
-          final email = user['email'];
-          final name = user['name']['first'] + ' ' + user['name']['last'];
-          final imageUrl = user['picture']['thumbnail'];
+          final email = user.email;
+          final phone = user.phone;
+          final icon = user.gender == 'male' ? Icons.male : Icons.female;
+          final name = user.fullName;
+          final dob = user.dob.date;
+          final location = user.location.postcode;
           return ListTile(
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(100),
-              child: Image.network(imageUrl),
-            ),
-            title: Text(name.toString()),
-            subtitle: Text(email),
+            leading: Icon(icon),
+            title: Text(name),
+            subtitle: Text(location),
           );
         },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: fetchUsers,
-        child: const Icon(Icons.add),
       ),
     );
   }
 
-  void fetchUsers() async {
-    print("fetchUsers Calls");
-    final url = 'https://randomuser.me/api/?results=100';
-    final uri = Uri.parse(url);
-    final response = await http.get(uri);
-    final body = response.body;
-    final json = jsonDecode(body);
+  Future<void> fetchUsers() async {
+    final response = await UserApi.fetchUsers();
+
     setState(() {
-      users = json['results'];
+      users = response;
     });
-    print("fetchUsers Complete");
   }
 }
